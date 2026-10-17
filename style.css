@@ -1,0 +1,672 @@
+/* Kuro Prefill — settings styled after Weird Prefill.
+   No chat styles or global theme variables are changed. */
+
+#kp_settings.kp-ui-settings {
+    --kp-border: rgba(255, 255, 255, 0.14);
+    --kp-border-strong: rgba(255, 255, 255, 0.30);
+    --kp-line: rgba(255, 255, 255, 0.22);
+    --kp-surface: rgba(255, 255, 255, 0.025);
+    --kp-field: rgba(0, 0, 0, 0.20);
+    --kp-hover: rgba(255, 255, 255, 0.065);
+    --kp-radius: 8px;
+    --kp-control-radius: 5px;
+    --kp-control-size: 32px;
+
+    width: 100%;
+    min-width: 0;
+    color: inherit;
+    font-family: inherit;
+    white-space: normal;
+}
+
+#kp_settings,
+#kp_settings * {
+    box-sizing: border-box;
+}
+
+#kp_settings .inline-drawer-content {
+    container-name: kuro-prefill;
+    container-type: inline-size;
+    min-width: 0;
+    padding-bottom: 12px;
+}
+
+/* Native drawer visibility is not overridden. */
+
+#kp_settings .kp-ui-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    padding-top: 8px;
+}
+
+#kp_settings .kp-ui-layout > * {
+    min-width: 0;
+    max-width: 100%;
+}
+
+#kp_settings small {
+    display: block;
+    margin: 0;
+    font-size: 0.8em;
+    line-height: 1.45;
+    opacity: 0.65;
+    overflow-wrap: anywhere;
+}
+
+#kp_settings label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Main switch and internal toggles */
+
+#kp_settings .kp-ui-toggle {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+#kp_settings .kp-ui-toggle > input[type="checkbox"] {
+    box-sizing: border-box;
+    flex: 0 0 18px;
+    align-self: flex-start;
+    width: 18px;
+    min-width: 18px;
+    max-width: 18px;
+    height: 18px;
+    min-height: 18px;
+    max-height: 18px;
+    aspect-ratio: 1;
+    margin: 3px 0 0;
+    padding: 0;
+}
+
+#kp_settings .kp-ui-toggle > span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+#kp_settings .kp-ui-toggle strong {
+    font-size: 0.92em;
+}
+
+#kp_settings .kp-ui-layout > .kp-ui-toggle {
+    padding: 10px 12px;
+    border: 1px solid var(--kp-border);
+    border-radius: var(--kp-radius);
+    background: var(--kp-surface);
+}
+
+/* Response structure and status */
+
+#kp_settings .kp-ui-trace {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 8px 12px;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--kp-border);
+    border-radius: var(--kp-radius);
+    background: rgba(0, 0, 0, 0.16);
+    font-size: 0.85em;
+    line-height: 1.5;
+}
+
+#kp_settings .kp-ui-trace code {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    white-space: normal;
+    opacity: 0.75;
+}
+
+#kp_settings .kp-ui-trace > i {
+    font-size: 0.85em;
+    opacity: 0.4;
+}
+
+#kp_settings .kp-ui-trace > span:not(.kp-ui-status) {
+    min-width: 0;
+    opacity: 0.65;
+}
+
+#kp_settings .kp-ui-status {
+    grid-column: 1 / -1;
+    justify-self: end;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    font-size: 0.85em;
+    line-height: 1.45;
+    text-align: right;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    opacity: 0.65;
+}
+
+#kp_settings .kp-ui-status[data-kind="success"] {
+    opacity: 0.9;
+}
+
+#kp_settings .kp-ui-status[data-kind="error"] {
+    color: #dfa7a7;
+    opacity: 1;
+}
+
+/* Cards: body spacing is independent of details rendering. */
+
+#kp_settings .kp-ui-card {
+    display: block;
+    min-width: 0;
+    margin: 0;
+    padding: 12px;
+    border: 1px solid var(--kp-border);
+    border-left: 2px solid var(--kp-line);
+    border-radius: var(--kp-radius);
+    background: var(--kp-surface);
+}
+
+#kp_settings .kp-ui-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: 0.82em;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    list-style: none;
+    cursor: pointer;
+}
+
+#kp_settings .kp-ui-title > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#kp_settings .kp-ui-title > i {
+    flex: 0 0 auto;
+    font-size: 0.75em;
+    opacity: 0.5;
+    transition: transform 0.15s ease;
+}
+
+#kp_settings .kp-ui-title::-webkit-details-marker {
+    display: none;
+}
+
+#kp_settings .kp-ui-title::marker {
+    content: "";
+}
+
+#kp_settings .kp-ui-card[open] > .kp-ui-title {
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--kp-border);
+}
+
+#kp_settings .kp-ui-card[open] > .kp-ui-title > i {
+    transform: rotate(90deg);
+}
+
+#kp_settings .kp-ui-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    padding-top: 12px;
+}
+
+#kp_settings .kp-ui-card-body > * {
+    flex-shrink: 0;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+}
+
+#kp_settings .kp-ui-card:not([open]) > .kp-ui-card-body,
+#kp_settings [hidden] {
+    display: none !important;
+}
+
+/* Fields */
+
+#kp_settings .kp-ui-field {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+}
+
+#kp_settings .kp-ui-field > label,
+#kp_settings .kp-ui-text-heading > label {
+    min-width: 0;
+    margin: 0;
+    font-size: 1em;
+    font-weight: 600;
+    line-height: 1.45;
+    opacity: 1;
+}
+
+#kp_settings .kp-ui-field > small,
+#kp_settings .kp-ui-field > .kp-ui-footer,
+#kp_settings .kp-ui-field > .kp-ui-actions {
+    grid-column: 1 / -1;
+}
+
+#kp_settings .text_pole {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: var(--kp-control-size);
+    margin: 0;
+    padding: 6px 10px;
+    border: 1px solid var(--kp-border);
+    border-radius: var(--kp-control-radius);
+    background: var(--kp-field);
+    color: inherit;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+#kp_settings select.text_pole {
+    padding-right: 26px;
+    text-overflow: ellipsis;
+}
+
+#kp_settings textarea.text_pole {
+    min-height: 84px;
+    resize: vertical;
+    font-family: var(--monoFontFamily, monospace);
+    font-style: normal;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    tab-size: 4;
+}
+
+#kp_settings #kp_prefill {
+    min-height: 150px;
+}
+
+#kp_settings .text_pole::placeholder {
+    color: inherit;
+    opacity: 0.4;
+}
+
+#kp_settings .text_pole:focus {
+    border-color: var(--kp-border-strong);
+}
+
+/* Headings and counters */
+
+#kp_settings .kp-ui-text-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+}
+
+#kp_settings .kp-ui-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+}
+
+#kp_settings .kp-ui-footer > span {
+    min-width: 0;
+    font-size: 0.75em;
+    opacity: 0.55;
+}
+
+/* Buttons keep whole labels, never one letter per line. */
+
+#kp_settings .menu_button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: auto;
+    min-width: max-content;
+    max-width: 100%;
+    height: auto;
+    min-height: var(--kp-control-size);
+    margin: 0;
+    padding: 6px 10px;
+    border: 1px solid var(--kp-border);
+    border-radius: var(--kp-control-radius);
+    background: rgba(255, 255, 255, 0.035);
+    color: inherit;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 0.85em;
+    line-height: 1.35;
+    text-align: center;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+    writing-mode: horizontal-tb;
+    cursor: pointer;
+}
+
+#kp_settings .menu_button > i {
+    flex: 0 0 auto;
+    opacity: 0.7;
+}
+
+#kp_settings .kp-ui-icon {
+    flex: 0 0 var(--kp-control-size);
+    width: var(--kp-control-size);
+    min-width: var(--kp-control-size);
+    height: var(--kp-control-size);
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+}
+
+#kp_settings .kp-ui-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+}
+
+#kp_settings :is(.text_pole, .menu_button, input[type="checkbox"]):disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#kp_settings .menu_button:disabled {
+    pointer-events: none;
+}
+
+#kp_settings :is(.menu_button, .text_pole, .kp-ui-title):focus-visible {
+    outline: 1px solid var(--kp-border-strong);
+    outline-offset: 2px;
+}
+
+@container kuro-prefill (min-width: 480px) {
+    #kp_settings .kp-ui-field-short {
+        grid-template-columns: minmax(130px, 34%) minmax(0, 1fr);
+        column-gap: 12px;
+    }
+}
+
+@media (hover: hover) {
+    #kp_settings .menu_button:hover {
+        border-color: var(--kp-border-strong);
+        background: var(--kp-hover);
+    }
+
+    #kp_settings .kp-ui-title:hover {
+        opacity: 0.85;
+    }
+}
+
+@media (pointer: coarse) {
+    #kp_settings.kp-ui-settings {
+        --kp-control-size: 44px;
+    }
+
+    #kp_settings .kp-ui-title {
+        min-height: 44px;
+    }
+
+    #kp_settings textarea.text_pole {
+        font-size: 16px;
+    }
+}
+
+/* Expanded editor: isolated from settings and other extensions. */
+
+dialog.kuro-prefill-editor,
+dialog.kuro-prefill-editor * {
+    box-sizing: border-box;
+}
+
+dialog.kuro-prefill-editor {
+    --kp-vw: 100vw;
+    --kp-vh: 100vh;
+    --kp-vx: 0px;
+    --kp-vy: 0px;
+
+    position: fixed;
+    inset: auto;
+    left: calc(var(--kp-vx) + var(--kp-vw) / 2);
+    top: calc(var(--kp-vy) + var(--kp-vh) / 2);
+    transform: translate(-50%, -50%);
+    width: 1100px;
+    height: calc(var(--kp-vh) - 48px);
+    max-width: calc(var(--kp-vw) - 24px);
+    max-height: calc(var(--kp-vh) - 24px);
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    background:
+        linear-gradient(
+            var(--SmartThemeBlurTintColor, rgba(18, 18, 20, 0.96)),
+            var(--SmartThemeBlurTintColor, rgba(18, 18, 20, 0.96))
+        ),
+        #121214;
+    color: var(--SmartThemeBodyColor, rgba(255, 255, 255, 0.85));
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+    font-family: inherit;
+    font-size: inherit;
+    text-shadow: none;
+    overscroll-behavior: contain;
+}
+
+dialog.kuro-prefill-editor:not([open]),
+dialog.kuro-prefill-editor [hidden] {
+    display: none !important;
+}
+
+dialog.kuro-prefill-editor::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.kuro-prefill-editor .kp-dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.kuro-prefill-editor .kp-dialog-heading {
+    flex: 0 0 auto;
+    min-width: 0;
+    max-height: 20%;
+    margin: 0;
+    padding: 0 0 10px;
+    overflow: auto;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    font-family: inherit;
+    font-size: 0.95em;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.kuro-prefill-editor textarea.kp-dialog-text {
+    display: block;
+    flex: 1 1 0;
+    width: 100%;
+    height: 0;
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 12px;
+    overflow: auto;
+    resize: none;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.2);
+    color: inherit;
+    box-shadow: none;
+    font-family: var(--monoFontFamily, monospace);
+    font-size: 0.92em;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.55;
+    text-align: left;
+    text-indent: 0;
+    text-shadow: none;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    tab-size: 4;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.kuro-prefill-editor .kp-dialog-buttons {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 0;
+}
+
+.kuro-prefill-editor button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 76px;
+    min-height: 38px;
+    margin: 0;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.025);
+    color: inherit;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 0.85em;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+    cursor: pointer;
+}
+
+.kuro-prefill-editor [data-kp-editor="save"] {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.kuro-prefill-editor .kp-dialog-discard {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.9em;
+}
+
+.kuro-prefill-editor .kp-dialog-discard > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.kuro-prefill-editor .kp-dialog-notice {
+    flex: 0 0 auto;
+    max-height: 25%;
+    padding: 8px 10px;
+    overflow: auto;
+    border: 1px solid rgba(220, 155, 135, 0.45);
+    border-radius: 5px;
+    font-size: 0.85em;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.kuro-prefill-editor :is(button, textarea):focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) {
+    .kuro-prefill-editor button:hover {
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.07);
+    }
+}
+
+@media (max-width: 700px), (pointer: coarse) {
+    dialog.kuro-prefill-editor {
+        width: calc(var(--kp-vw) - 12px);
+        max-width: min(1100px, calc(var(--kp-vw) - 12px));
+        height: calc(var(--kp-vh) - 12px);
+        max-height: calc(var(--kp-vh) - 12px);
+        padding: 10px;
+    }
+
+    .kuro-prefill-editor .kp-dialog-content {
+        gap: 8px;
+    }
+
+    .kuro-prefill-editor textarea.kp-dialog-text {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .kuro-prefill-editor button {
+        min-height: 44px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #kp_settings .kp-ui-title > i {
+        transition: none;
+    }
+}
