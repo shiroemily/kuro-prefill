@@ -35,7 +35,8 @@ const DEFAULT_SETTINGS = Object.freeze({
     mergePreFunctionAssistant: false,
     geminiOnly: true,
     useOpenAIProxyTransport: false,
-    enableGeminiToolDeclaration: true,
+    enableGeminiToolDeclaration: false,
+    geminiToolDeclarationUserToggled: false,
     geminiToolDescription: DEFAULT_GEMINI_TOOL_DESCRIPTION,
     useThoughtSignature: true,
     thoughtSignatureMode: THOUGHT_SIGNATURE_MODES.AUTO,
@@ -103,7 +104,14 @@ function mergeSettings(saved) {
     }
 
     base.mergePreFunctionAssistant = base.mergePreFunctionAssistant === true;
-    base.enableGeminiToolDeclaration = base.enableGeminiToolDeclaration !== false;
+
+    // Reset auto-enabled Gemini tool declaration from the previous build unless
+    // the user explicitly toggled it on in the UI.
+    if (!base.geminiToolDeclarationUserToggled) {
+        base.enableGeminiToolDeclaration = false;
+    } else {
+        base.enableGeminiToolDeclaration = base.enableGeminiToolDeclaration === true;
+    }
 
     base.cachedThoughtSignatures = (
         base.cachedThoughtSignatures && typeof base.cachedThoughtSignatures === 'object'
@@ -191,22 +199,20 @@ function bytesToBase64(bytes) {
 /**
  * Builds a structurally valid Gemini thoughtSignature protobuf blob:
  * Outer field 2 (wire type 2: 0x12) -> Inner field 1 (wire type 2: 0x0a)
- * -> Tink AEAD prefix (0x01 + 4-byte key ID) + 300-byte deterministic payload.
- * Passes proxy length (>= 50 chars), base64, and protobuf wire-format checks.
+ * -> Tink AEAD prefix (0x01 + 4-byte key ID) + 82-byte payload (matches 91-byte
+ * `ElkKVwFpFH0T...` Gemini signature structure).
  */
 function buildSyntheticProtobufThoughtSignature(seedText = '') {
-    const payloadLength = 305; // 1 (version) + 4 (keyId) + 300 (ciphertext+tag)
+    const payloadLength = 87; // 1 (version) + 4 (keyId) + 82 (ciphertext+tag)
     const innerPayload = new Uint8Array(payloadLength);
 
-    // Tink AEAD header: version 0x01 + 4-byte key ID (matches Gemini 3 Tink prefix)
+    // 5-byte Tink header from real Log.txt signature (`FpFH0T` -> 0x01 0x69 0x14 0x7d 0x13)
     innerPayload[0] = 0x01;
-    innerPayload[1] = 0xd1;
-    innerPayload[2] = 0xed;
-    innerPayload[3] = 0x8a;
-    innerPayload[4] = 0x6f;
+    innerPayload[1] = 0x69;
+    innerPayload[2] = 0x14;
+    innerPayload[3] = 0x7d;
+    innerPayload[4] = 0x13;
 
-    // Deterministic PRNG (xorshift32) seeded from model/call context so the
-    // ciphertext body has realistic high-entropy distribution.
     let state = 0x811c9dc5;
     const seedInput = `gemini_thought_sig:${TOOL_NAME}:${seedText}`;
     for (let i = 0; i < seedInput.length; i++) {
@@ -239,7 +245,6 @@ function buildSyntheticProtobufThoughtSignature(seedText = '') {
 /**
  * Builds an experimental token matching the supplied sample's byte length
  * and first five bytes. The remaining bytes are random.
- * This is not a provider-signed token or a verified protobuf structure.
  */
 function buildExperimentalShortToken() {
     if (typeof globalThis.crypto?.getRandomValues !== 'function') {
@@ -857,20 +862,18 @@ function injectFunctionResponsePrefill(generateData, rawSettings, resolvedPrefil
     };
 
     if (thoughtSignatureInfo.signature) {
-        // Picked up by SillyTavern's convertGooglePrompt (makersuite/vertexai)
-        // and addOpenRouterSignatures (openrouter).
-        syntheticToolCall.signature = thoughtSignatureInfo.signature;
-
-        // Picked up when sent directly to Google's /v1beta/openai endpoint,
-        // LiteLLM, CLIProxyAPI, NewAPI, or other OpenAI-compatible Gemini proxies.
         if (isOpenAICompatTransport) {
+            // Send only the single official OpenAI-compatible extra_content
+            // field instead of 3-4 duplicate signature keys on tool_calls[0].
             syntheticToolCall.extra_content = {
                 google: {
                     thought_signature: thoughtSignatureInfo.signature,
                 },
             };
-            syntheticToolCall.thought_signature = thoughtSignatureInfo.signature;
-            syntheticToolCall.thoughtSignature = thoughtSignatureInfo.signature;
+        } else {
+            // Picked up and stripped by SillyTavern's convertGooglePrompt
+            // (makersuite/vertexai) and addOpenRouterSignatures (openrouter).
+            syntheticToolCall.signature = thoughtSignatureInfo.signature;
         }
     }
 
@@ -892,11 +895,15 @@ function injectFunctionResponsePrefill(generateData, rawSettings, resolvedPrefil
             : null,
     );
 
+    // Do NOT attach `name: TOOL_NAME` to the `role: 'tool'` message:
+    // SillyTavern's mergeMessages post-processor prepends `${message.name}: `
+    // to `message.content` when `name` is present (turning `<thinking>` into
+    // `kuro_prefill: <thinking>`), and convertGooglePrompt resolves the tool
+    // name from `tool_calls[0].id` via `toolNameMap` without needing `name`.
     generateData.messages.push(
         syntheticAssistantMessage,
         {
             role: 'tool',
-            ...(claudeTarget ? {} : { name: TOOL_NAME }),
             tool_call_id: callId,
             content: prefill,
         },
@@ -1024,11 +1031,9 @@ async function fetchRealGeminiThoughtSignature() {
         messages: [
             {
                 role: 'user',
-                content: `Call the ${TOOL_NAME} tool with mode="assistant_prefill".`,
+                content: 'Reply with OK.',
             },
         ],
-        tools: [buildPrefillToolDeclaration(settings.geminiToolDescription, false)],
-        tool_choice: 'auto',
     };
 
     routeNativeGeminiProxyThroughOpenAI(body, settings.useOpenAIProxyTransport);
@@ -1197,6 +1202,9 @@ function bindCheckbox(id, key, onChange = null) {
     element.checked = Boolean(settings[key]);
     element.addEventListener('change', () => {
         getSettings()[key] = element.checked;
+        if (key === 'enableGeminiToolDeclaration') {
+            getSettings().geminiToolDeclarationUserToggled = true;
+        }
         saveSettingsDebounced();
         onChange?.();
     });
@@ -1332,8 +1340,8 @@ function buildKuroPrefillMarkup() {
                             )}
                             ${toggle(
                                 'kp_enable_gemini_tool_declaration',
-                                'Declare prefill tool &amp; description for Gemini',
-                                'Registers the synthetic tool schema and description in generateData.tools for Gemini requests.',
+                                'Declare prefill tool &amp; description for Gemini (optional)',
+                                'Off by default. Leave OFF if your provider routes tool-declared requests to flash-lite or refuses when tools are declared.',
                             )}
                             <div class="kp-ui-field">
                                 ${editorHeading('kp_gemini_tool_description', 'Gemini tool description')}
